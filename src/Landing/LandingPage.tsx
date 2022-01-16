@@ -2,18 +2,40 @@ import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
 import { useImmutableX } from '@/hooks/useImmutableX';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 const LandingPage = () => {
   const { client, link } = useImmutableX('mainnet');
+  const [address, setAddress] = useLocalStorage<string>('@wallet_address', '');
+  const [starkPublicKey, setStarkPublicKey] = useLocalStorage<string>(
+    '@stark_public_key',
+    '',
+  );
 
   const onClickSetupIMX = useCallback(async () => {
     const { address, starkPublicKey } = await link.setup({});
-    console.log(address, starkPublicKey);
-  }, [link]);
+    setAddress(address);
+    setStarkPublicKey(starkPublicKey);
+  }, [link, setAddress, setStarkPublicKey]);
+
+  const onClickDisconnectIMX = useCallback(async () => {
+    setAddress('');
+    setStarkPublicKey('');
+  }, [setAddress, setStarkPublicKey]);
 
   return (
     <Container>
-      <SetupButton onClick={onClickSetupIMX}>Setup IMX</SetupButton>
+      {!address ? (
+        <SetupButton onClick={onClickSetupIMX}>Setup IMX</SetupButton>
+      ) : (
+        <DisconnectButton onClick={onClickDisconnectIMX}>
+          Disconnect
+        </DisconnectButton>
+      )}
+      <br />
+      <span>ADDRESS: {address}</span>
+      <br />
+      <span>STARK PUBLIC KEY: {starkPublicKey}</span>
     </Container>
   );
 };
@@ -25,6 +47,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: white;
 `;
 
 const SetupButton = styled.button`
@@ -36,11 +59,17 @@ const SetupButton = styled.button`
   justify-content: center;
 
   border: 1px solid #17aabf;
-  border-radius: 8px;
+  border-radius: 10px;
   background-color: #1dc1d8;
 
   font-weight: bold;
   font-size: 1.65rem;
   color: white;
   line-height: 120%;
+`;
+const DisconnectButton = styled(SetupButton)`
+  border: 3px solid #24d1e9;
+  border-radius: 10px;
+  background-color: transparent;
+  color: #24d1e9;
 `;
