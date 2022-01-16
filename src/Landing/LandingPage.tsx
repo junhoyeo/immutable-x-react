@@ -7,6 +7,7 @@ import { Environment, useImmutableX } from '@/hooks/useImmutableX';
 import { useImmutableXAssets } from '@/hooks/useImmutableXAssets';
 import { useImmutableXBalance } from '@/hooks/useImmutableXBalance';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { ETHTokenType } from '@imtbl/imx-sdk';
 
 const LandingPage = () => {
   const [environment, setEnvironment] = useLocalStorage<Environment>(
@@ -43,6 +44,20 @@ const LandingPage = () => {
   const { assets } = useImmutableXAssets({ client, address });
 
   const [amount, setAmount] = useState<string>('0');
+
+  const onClickDeposit = useCallback(async () => {
+    if (!link) {
+      return;
+    }
+    const isValidAmount = parseFloat(amount) > 0;
+    if (!isValidAmount) {
+      return;
+    }
+    link.deposit({
+      type: ETHTokenType.ETH,
+      amount,
+    });
+  }, [link, amount]);
 
   return (
     <Container>
@@ -89,7 +104,7 @@ const LandingPage = () => {
         onChange={(event) => setAmount(event.target.value)}
       />
       <div style={{ marginTop: 16 }}>
-        <PrimaryButton>Deposit</PrimaryButton>
+        <PrimaryButton onClick={onClickDeposit}>Deposit</PrimaryButton>
       </div>
       <List>
         {assets.map((asset) => (
