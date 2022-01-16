@@ -8,8 +8,8 @@ const ENDPOINTS = {
     PUBLIC_API: 'https://api.x.immutable.com/v1',
   },
   ropsten: {
-    LINK: 'https://ropsten.link.x.immutable.com',
-    PUBLIC_API: 'https://ropsten.api.x.immutable.com/v1',
+    LINK: 'https://link.ropsten.x.immutable.com',
+    PUBLIC_API: 'https://api.ropsten.x.immutable.com/v1',
   },
 };
 
