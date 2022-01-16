@@ -1,7 +1,9 @@
+import { ethers } from 'ethers';
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
 import { useImmutableX } from '@/hooks/useImmutableX';
+import { useImmutableXBalance } from '@/hooks/useImmutableXBalance';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 const LandingPage = () => {
@@ -26,6 +28,8 @@ const LandingPage = () => {
     setStarkPublicKey('');
   }, [setAddress, setStarkPublicKey]);
 
+  const balance = useImmutableXBalance({ client, address });
+
   return (
     <Container>
       {!address ? (
@@ -39,6 +43,20 @@ const LandingPage = () => {
       <span>ADDRESS: {address}</span>
       <br />
       <span>STARK PUBLIC KEY: {starkPublicKey}</span>
+      <br />
+      <ul>
+        <li>IMX: {balance ? ethers.utils.formatEther(balance.imx) : '-'}</li>
+        <li>
+          Preparing withdrawal:{' '}
+          {balance
+            ? ethers.utils.formatEther(balance.preparingWithdrawal)
+            : '-'}
+        </li>
+        <li>
+          Withdrawal:{' '}
+          {balance ? ethers.utils.formatEther(balance.withdrawable) : '-'}
+        </li>
+      </ul>
     </Container>
   );
 };
