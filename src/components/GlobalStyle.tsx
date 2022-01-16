@@ -5,8 +5,13 @@ export const GlobalStyle = createGlobalStyle`
   ${normalize}
 
   * {
+    font-family: 'Rajdhani', sans-serif;
     box-sizing: border-box;
     word-break: keep-all;
+  }
+
+  html {
+    background-color: #11131c;
   }
 
   body {
