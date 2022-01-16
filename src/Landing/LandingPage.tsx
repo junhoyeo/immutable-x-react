@@ -1,13 +1,18 @@
 import { ethers } from 'ethers';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 
-import { useImmutableX } from '@/hooks/useImmutableX';
+import { Tab } from '@/components/Tab';
+import { Environment, useImmutableX } from '@/hooks/useImmutableX';
 import { useImmutableXBalance } from '@/hooks/useImmutableXBalance';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 const LandingPage = () => {
-  const { client, link } = useImmutableX('mainnet');
+  const [environment, setEnvironment] = useLocalStorage<Environment>(
+    '@environment',
+    'mainnet',
+  );
+  const { client, link } = useImmutableX(environment);
   const [address, setAddress] = useLocalStorage<string>('@wallet_address', '');
   const [starkPublicKey, setStarkPublicKey] = useLocalStorage<string>(
     '@stark_public_key',
@@ -18,9 +23,13 @@ const LandingPage = () => {
     if (!link) {
       return;
     }
-    const { address, starkPublicKey } = await link.setup({});
-    setAddress(address);
-    setStarkPublicKey(starkPublicKey);
+    try {
+      const { address, starkPublicKey } = await link.setup({});
+      setAddress(address);
+      setStarkPublicKey(starkPublicKey);
+    } catch (error) {
+      console.error(error);
+    }
   }, [link, setAddress, setStarkPublicKey]);
 
   const onClickDisconnectIMX = useCallback(async () => {
@@ -39,6 +48,19 @@ const LandingPage = () => {
           Disconnect
         </DisconnectButton>
       )}
+      <br />
+      <Tab
+        selected={environment}
+        onChange={(value) => {
+          setEnvironment(value);
+          setAddress('');
+          window.location.reload();
+        }}
+        tabs={[
+          { type: 'mainnet', title: 'Mainnet' },
+          { type: 'ropsten', title: 'Ropsten (Testnet)' },
+        ]}
+      />
       <br />
       <span>ADDRESS: {address}</span>
       <br />

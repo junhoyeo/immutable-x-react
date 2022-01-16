@@ -13,7 +13,7 @@ const ENDPOINTS = {
   },
 };
 
-type Environment = 'mainnet' | 'ropsten';
+export type Environment = 'mainnet' | 'ropsten';
 
 export const getImmutableX = async (environment: Environment) => {
   const Endpoint =
