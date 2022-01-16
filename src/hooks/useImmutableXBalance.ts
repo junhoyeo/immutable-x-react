@@ -34,6 +34,9 @@ export const useImmutableXBalance = ({
           preparingWithdrawal: data.preparing_withdrawal,
           withdrawable: data.withdrawable,
         });
+      })
+      .catch((error) => {
+        console.log(error);
       });
   }, [client, address]);
 

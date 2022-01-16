@@ -54,7 +54,6 @@ const LandingPage = () => {
         onChange={(value) => {
           setEnvironment(value);
           setAddress('');
-          window.location.reload();
         }}
         tabs={[
           { type: 'mainnet', title: 'Mainnet' },
