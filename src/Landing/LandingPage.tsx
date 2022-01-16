@@ -13,6 +13,9 @@ const LandingPage = () => {
   );
 
   const onClickSetupIMX = useCallback(async () => {
+    if (!link) {
+      return;
+    }
     const { address, starkPublicKey } = await link.setup({});
     setAddress(address);
     setStarkPublicKey(starkPublicKey);
