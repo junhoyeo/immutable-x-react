@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { ImmutableXClient } from '@imtbl/imx-sdk';
 
 type UseBalanceParams = {
-  client: ImmutableXClient;
+  client: ImmutableXClient | null;
   address: string;
 };
 

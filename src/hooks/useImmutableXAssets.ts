@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ImmutableMethodResults, ImmutableXClient } from '@imtbl/imx-sdk';
 
 type UseAssetsParams = {
-  client: ImmutableXClient;
+  client: ImmutableXClient | null;
   address: string;
 };
 
@@ -19,6 +19,9 @@ export const useImmutableXAssets = ({ client, address }: UseAssetsParams) => {
   const [nextCursor, setNextCursor] = useState<string | undefined>(undefined);
 
   useEffect(() => {
+    if (!client || !address) {
+      return;
+    }
     client
       .getAssets({
         user: address,
