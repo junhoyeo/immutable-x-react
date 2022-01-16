@@ -46,11 +46,11 @@ const LandingPage = () => {
   return (
     <Container>
       {!address ? (
-        <SetupButton onClick={onClickSetupIMX}>Setup IMX</SetupButton>
+        <PrimaryButton onClick={onClickSetupIMX}>Setup IMX</PrimaryButton>
       ) : (
-        <DisconnectButton onClick={onClickDisconnectIMX}>
+        <SecondaryButton onClick={onClickDisconnectIMX}>
           Disconnect
-        </DisconnectButton>
+        </SecondaryButton>
       )}
       <br />
       <Tab
@@ -106,7 +106,7 @@ const Container = styled.div`
   color: white;
 `;
 
-const SetupButton = styled.button`
+const PrimaryButton = styled.button`
   width: fit-content;
   padding: 12px 32px;
 
@@ -123,7 +123,7 @@ const SetupButton = styled.button`
   color: white;
   line-height: 120%;
 `;
-const DisconnectButton = styled(SetupButton)`
+const SecondaryButton = styled(PrimaryButton)`
   border: 3px solid #24d1e9;
   border-radius: 10px;
   background-color: transparent;
