@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { Tab } from '@/components/Tab';
 import { Environment, useImmutableX } from '@/hooks/useImmutableX';
+import { useImmutableXAssets } from '@/hooks/useImmutableXAssets';
 import { useImmutableXBalance } from '@/hooks/useImmutableXBalance';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
@@ -38,6 +39,9 @@ const LandingPage = () => {
   }, [setAddress, setStarkPublicKey]);
 
   const balance = useImmutableXBalance({ client, address });
+
+  const { assets } = useImmutableXAssets({ client, address });
+  console.log(assets.length);
 
   return (
     <Container>
@@ -78,6 +82,16 @@ const LandingPage = () => {
           {balance ? ethers.utils.formatEther(balance.withdrawable) : '-'}
         </li>
       </ul>
+      <List>
+        {assets.map((asset) => (
+          <ListItem key={asset.uri}>
+            <ListItemImage src={asset.image_url} />
+            <pre>
+              <code>{JSON.stringify(asset, null, 2)}</code>
+            </pre>
+          </ListItem>
+        ))}
+      </List>
     </Container>
   );
 };
@@ -114,4 +128,31 @@ const DisconnectButton = styled(SetupButton)`
   border-radius: 10px;
   background-color: transparent;
   color: #24d1e9;
+`;
+
+const List = styled.ul`
+  width: 100%;
+  margin: 0;
+  padding: 0 24px;
+
+  display: flex;
+  list-style-type: none;
+`;
+const ListItem = styled.li`
+  width: 100%;
+  display: flex;
+
+  & > pre {
+    margin: 0;
+    margin-left: 16px;
+    flex: 1;
+    display: flex;
+    word-break: keep-all;
+    font-size: 0.8rem;
+  }
+`;
+const ListItemImage = styled.img`
+  width: 256px;
+  height: 256px;
+  border-radius: 10px;
 `;
