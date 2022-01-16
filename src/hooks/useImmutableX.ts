@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+
 import { ImmutableXClient, Link } from '@imtbl/imx-sdk';
 
 const ENDPOINTS = {
@@ -23,4 +25,18 @@ export const getImmutableX = async (environment: Environment) => {
   });
 
   return { link, client };
+};
+
+export const useImmutableX = (environment: Environment) => {
+  const linkRef = useRef<Link | null>(null);
+  const clientRef = useRef<ImmutableXClient | null>(null);
+
+  useEffect(() => {
+    getImmutableX(environment).then(({ link, client }) => {
+      linkRef.current = link;
+      clientRef.current = client;
+    });
+  }, [environment]);
+
+  return { link: linkRef.current, client: clientRef.current };
 };
