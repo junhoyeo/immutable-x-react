@@ -41,7 +41,8 @@ const LandingPage = () => {
   const balance = useImmutableXBalance({ client, address });
 
   const { assets } = useImmutableXAssets({ client, address });
-  console.log(assets.length);
+
+  const [amount, setAmount] = useState<string>('0');
 
   return (
     <Container>
@@ -82,6 +83,14 @@ const LandingPage = () => {
           {balance ? ethers.utils.formatEther(balance.withdrawable) : '-'}
         </li>
       </ul>
+      <Input
+        type="number"
+        value={amount}
+        onChange={(event) => setAmount(event.target.value)}
+      />
+      <div style={{ marginTop: 16 }}>
+        <PrimaryButton>Deposit</PrimaryButton>
+      </div>
       <List>
         {assets.map((asset) => (
           <ListItem key={asset.uri}>
@@ -155,4 +164,14 @@ const ListItemImage = styled.img`
   width: 256px;
   height: 256px;
   border-radius: 10px;
+`;
+
+const Input = styled.input`
+  border: 3px solid #24d1e9;
+  border-radius: 10px;
+  background-color: transparent;
+  color: #24d1e9;
+  padding: 12px 24px;
+  font-size: 1.65rem;
+  line-height: 120%;
 `;
