@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 import { ImmutableXClient, Link } from '@imtbl/imx-sdk';
 
@@ -28,15 +28,19 @@ export const getImmutableX = async (environment: Environment) => {
 };
 
 export const useImmutableX = (environment: Environment) => {
-  const linkRef = useRef<Link | null>(null);
-  const clientRef = useRef<ImmutableXClient | null>(null);
+  const [link, setLink] = useState<Link | null>(null);
+  const [client, setClient] = useState<ImmutableXClient | null>(null);
 
   useEffect(() => {
-    getImmutableX(environment).then(({ link, client }) => {
-      linkRef.current = link;
-      clientRef.current = client;
-    });
+    getImmutableX(environment)
+      .then(({ link, client }) => {
+        setLink(link);
+        setClient(client);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, [environment]);
 
-  return { link: linkRef.current, client: clientRef.current };
+  return { link, client };
 };
