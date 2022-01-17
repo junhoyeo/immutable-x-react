@@ -1,3 +1,3 @@
-# @junhoyeo/immutable-x-template
+# @junhoyeo/immutable-x-react
 
-Mint NFTs with Immutable X or Ethereum
+React example to interact with Immutable X
