@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Tab } from '@/components/Tab';
 import { Environment, useImmutableX } from '@/hooks/useImmutableX';
 import { useImmutableXAssets } from '@/hooks/useImmutableXAssets';
-import { useImmutableXBalance } from '@/hooks/useImmutableXBalance';
+import { useImmutableXBalances } from '@/hooks/useImmutableXBalances';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { ETHTokenType } from '@imtbl/imx-sdk';
 
@@ -20,6 +20,11 @@ const LandingPage = () => {
     '@stark_public_key',
     '',
   );
+  const {
+    balances,
+    setBalances,
+    refetch: refetchBalances,
+  } = useImmutableXBalances({ client, address });
 
   const onClickSetupIMX = useCallback(async () => {
     if (!link) {
@@ -29,17 +34,16 @@ const LandingPage = () => {
       const { address, starkPublicKey } = await link.setup({});
       setAddress(address);
       setStarkPublicKey(starkPublicKey);
+      refetchBalances();
     } catch (error) {
       console.error(error);
     }
-  }, [link, setAddress, setStarkPublicKey]);
+  }, [link, setAddress, setStarkPublicKey, refetchBalances]);
 
   const onClickDisconnectIMX = useCallback(async () => {
     setAddress('');
     setStarkPublicKey('');
   }, [setAddress, setStarkPublicKey]);
-
-  const balance = useImmutableXBalance({ client, address });
 
   const { assets } = useImmutableXAssets({ client, address });
 
@@ -74,6 +78,7 @@ const LandingPage = () => {
         onChange={(value) => {
           setEnvironment(value);
           setAddress('');
+          setBalances([]);
         }}
         tabs={[
           { type: 'mainnet', title: 'Mainnet' },
@@ -85,19 +90,23 @@ const LandingPage = () => {
       <br />
       <span>STARK PUBLIC KEY: {starkPublicKey}</span>
       <br />
-      <ul>
-        <li>IMX: {balance ? ethers.utils.formatEther(balance.imx) : '-'}</li>
-        <li>
-          Preparing withdrawal:{' '}
-          {balance
-            ? ethers.utils.formatEther(balance.preparingWithdrawal)
-            : '-'}
-        </li>
-        <li>
-          Withdrawal:{' '}
-          {balance ? ethers.utils.formatEther(balance.withdrawable) : '-'}
-        </li>
-      </ul>
+      {balances.map((balance, index) => (
+        <ul key={index}>
+          <li>
+            IMX: {balance ? ethers.utils.formatEther(balance.balance) : '-'}
+          </li>
+          <li>
+            Preparing withdrawal:{' '}
+            {balance
+              ? ethers.utils.formatEther(balance.preparingWithdrawal)
+              : '-'}
+          </li>
+          <li>
+            Withdrawal:{' '}
+            {balance ? ethers.utils.formatEther(balance.withdrawable) : '-'}
+          </li>
+        </ul>
+      ))}
       <Input
         type="number"
         value={amount}
